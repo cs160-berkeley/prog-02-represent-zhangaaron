@@ -3,44 +3,71 @@ package com.cs160.joleary.catnip;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends Activity {
     //there's not much interesting happening. when the buttons are pressed, they start
     //the PhoneToWatchService with the cat name passed in.
 
-    private Button mFredButton;
-    private Button mLexyButton;
+//    private Button mFredButton;
+//    private Button mLexyButton;
+
+    private RecyclerView mRecyclerMain;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFredButton = (Button) findViewById(R.id.fred_btn);
-        mLexyButton = (Button) findViewById(R.id.lexy_btn);
+//        mFredButton = (Button) findViewById(R.id.fred_btn);
+//        mLexyButton = (Button) findViewById(R.id.lexy_btn);
+//
+//        mFredButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent sendIntent = new Intent(getBaseContext(), PhoneToWatchService.class);
+//                sendIntent.putExtra("CAT_NAME", "Fred");
+//                startService(sendIntent);
+//            }
+//        });
+//
+//        mLexyButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent sendIntent = new Intent(getBaseContext(), PhoneToWatchService.class);
+//                sendIntent.putExtra("CAT_NAME", "Lexy");
+//                startService(sendIntent);
+//            }
+//        });
 
-        mFredButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent sendIntent = new Intent(getBaseContext(), PhoneToWatchService.class);
-                sendIntent.putExtra("CAT_NAME", "Fred");
-                startService(sendIntent);
-            }
-        });
+        mRecyclerMain = (RecyclerView)findViewById(R.id.recycler_main);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerMain.setHasFixedSize(true);
 
-        mLexyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent sendIntent = new Intent(getBaseContext(), PhoneToWatchService.class);
-                sendIntent.putExtra("CAT_NAME", "Lexy");
-                startService(sendIntent);
-            }
-        });
+        //set grid layout manager
+        mLayoutManager = new GridLayoutManager(this, 1); // span count 2
+        mRecyclerMain.setLayoutManager(mLayoutManager);
+
+        //populate with dummy rep
+        Representative dummy_rep = new Representative("Bernie Sanders, I", "berniesanders@server.gov", "berniesanders.com", R.drawable.fred_160);
+        List<Representative> _list = new ArrayList<>();
+        _list.add(dummy_rep);
+
+        //set adapter
+        mAdapter = new RepDataAdapter(_list);
+        mRecyclerMain.setAdapter(mAdapter);
 
     }
 
