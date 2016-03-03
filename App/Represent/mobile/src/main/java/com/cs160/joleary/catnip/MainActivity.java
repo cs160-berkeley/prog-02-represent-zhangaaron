@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,7 +20,7 @@ public class MainActivity extends Activity {
     //the PhoneToWatchService with the cat name passed in.
 
 //    private Button mFredButton;
-//    private Button mLexyButton;
+    private Button mButton2;
 
     private RecyclerView mRecyclerMain;
     private RecyclerView.Adapter mAdapter;
@@ -29,9 +30,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        mFredButton = (Button) findViewById(R.id.fred_btn);
-//        mLexyButton = (Button) findViewById(R.id.lexy_btn);
+        mButton2 = (Button) findViewById(R.id.button2);
 //
 //        mFredButton.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -42,14 +41,14 @@ public class MainActivity extends Activity {
 //            }
 //        });
 //
-//        mLexyButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent sendIntent = new Intent(getBaseContext(), PhoneToWatchService.class);
-//                sendIntent.putExtra("CAT_NAME", "Lexy");
-//                startService(sendIntent);
-//            }
-//        });
+        mButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent sendIntent = new Intent(getBaseContext(), PhoneToWatchService.class);
+                sendIntent.putExtra("CAT_NAME", "Lexy");
+                startService(sendIntent);
+            }
+        });
 
         mRecyclerMain = (RecyclerView)findViewById(R.id.recycler_main);
         // use this setting to improve performance if you know that changes
@@ -66,9 +65,8 @@ public class MainActivity extends Activity {
         _list.add(dummy_rep);
 
         //set adapter
-        mAdapter = new RepDataAdapter(_list);
+        mAdapter = new RepDataAdapter(_list, getApplicationContext());
         mRecyclerMain.setAdapter(mAdapter);
-
     }
 
 

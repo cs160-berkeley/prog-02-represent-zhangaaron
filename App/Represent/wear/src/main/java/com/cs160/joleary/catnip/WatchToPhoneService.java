@@ -42,7 +42,7 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
         //and actually connect it
         Log.d(this.getClass().toString(), "try to create the service");
         mWatchApiClient.connect();
-        Log.d(this.getClass().toString(), "sucess");
+        Log.d(this.getClass().toString(), "success");
     }
 
     @Override
@@ -79,6 +79,7 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
         // Which cat do we want to feed? Grab this info from INTENT
         // which was passed over when we called startService
         Bundle extras = intent.getExtras();
+        final String rep_id = extras.getString("REP_ID");
         Log.d(this.getClass().toString(), "In onStartCommand");
 
         // Send the message with the cat name
@@ -88,8 +89,8 @@ public class WatchToPhoneService extends Service implements GoogleApiClient.Conn
                 //first, connect to the apiclient
                 mWatchApiClient.connect();
                 //now that you're connected, send a massage with the cat name
-                sendMessage("/send_toast", "Good job!");
-                Log.d(this.getClass().toString(), "Ssent message from onStartCommand");
+                sendMessage("/get_rep", rep_id);
+                Log.d(this.getClass().toString(), "Sent message from onStartCommand");
             }
         }).start();
 

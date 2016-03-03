@@ -50,6 +50,8 @@ public class PhoneToWatchService extends Service {
         Bundle extras = intent.getExtras();
         final String catName = extras.getString("CAT_NAME");
 
+        Log.d(this.getClass().toString(), "In onStartCommand");
+
         // Send the message with the cat name
         new Thread(new Runnable() {
             @Override
