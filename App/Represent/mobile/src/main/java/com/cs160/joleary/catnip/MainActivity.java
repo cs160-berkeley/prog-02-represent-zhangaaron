@@ -72,19 +72,27 @@ public class MainActivity extends Activity {
 
         List<Representative> _list = new ArrayList<>();
         //populate with dummy rep
-        for (int i= 0; i < 3; i++) {
-            Random rand = new Random();
-            int start1 = rand.nextInt(40);
-            int start2 = rand.nextInt(40);
-            Representative dummy_rep = new Representative(lorem.substring(start1, start1 + 10) + " , I", lorem.substring(start2, start2 + 10) + "@something.gov", "website.com", R.drawable.fred_160);
-            _list.add(dummy_rep);
-        }
+        Representative a1 = new Representative("Bernie Sanders, I", "bern@something.gov", "website.com", R.drawable.fred_160);
+        Representative b2 = new Representative("Hillary Clinton, D", "hil@privateserver.gov", "website.com", R.drawable.fred_160);
+        Representative c3 = new Representative("Dolan Trump, R", "dolan@something.gov", "websitearony.com",  R.drawable.fred_160);
+        _list.add(a1);
+        _list.add(b2);
+        _list.add(c3);
+
+//        for (int i= 0; i < 3; i++) {
+//            Random rand = new Random();
+//            int start1 = rand.nextInt(40);
+//            int start2 = rand.nextInt(40);
+//            Representative dummy_rep = new Representative(lorem.substring(start1, start1 + 10) + " , I", lorem.substring(start2, start2 + 10) + "@something.gov", "website.com", R.drawable.fred_160);
+//            _list.add(dummy_rep);
+//        }
 
         //set adapter
         mAdapter = new RepDataAdapter(_list, getApplicationContext());
         mRecyclerMain.setAdapter(mAdapter);
-
-
+        Intent startWatch = new Intent(getApplicationContext(), PhoneToWatchService.class);
+        startWatch.putExtra("zip", new Integer(zip_code).toString());
+        startService(startWatch);
 
     }
 

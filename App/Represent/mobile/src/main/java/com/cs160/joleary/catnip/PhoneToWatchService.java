@@ -49,7 +49,7 @@ public class PhoneToWatchService extends Service {
         // Which cat do we want to feed? Grab this info from INTENT
         // which was passed over when we called startService
         Bundle extras = intent.getExtras();
-        final String repName = extras.getString("rep_name");
+        final String zip = extras.getString("zip");
 
         Log.d(this.getClass().toString(), "In onStartCommand");
 
@@ -60,7 +60,8 @@ public class PhoneToWatchService extends Service {
                 //first, connect to the apiclient
                 mApiClient.connect();
                 //now that you're connected, send a massage with the cat name
-                sendMessage("/rep", repName);
+                Log.d(this.getClass().toString(), " ZIP IS " + zip);
+                sendMessage("/zip", zip);
             }
         }).start();
 
