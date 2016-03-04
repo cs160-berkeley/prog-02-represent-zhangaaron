@@ -11,46 +11,57 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends Activity {
     //there's not much interesting happening. when the buttons are pressed, they start
     //the PhoneToWatchService with the cat name passed in.
 
-//    private Button mFredButton;
-    private Button mButton2;
-
     private RecyclerView mRecyclerMain;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private int zip_code;
+    private TextView zip_code_display;
+    final String lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
+            zip_code = b.getInt("ZIP");
+        }
+        if (zip_code == 0) {
+            Intent intent = new Intent(this, ZipDialog.class );
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mButton2 = (Button) findViewById(R.id.button2);
-//
-//        mFredButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent sendIntent = new Intent(getBaseContext(), PhoneToWatchService.class);
-//                sendIntent.putExtra("CAT_NAME", "Fred");
-//                startService(sendIntent);
-//            }
-//        });
-//
-        mButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent sendIntent = new Intent(getBaseContext(), PhoneToWatchService.class);
-                sendIntent.putExtra("CAT_NAME", "Lexy");
-                startService(sendIntent);
-            }
-        });
+        Bundle b = getIntent().getExtras();
+        if (b != null) {
 
-        mRecyclerMain = (RecyclerView)findViewById(R.id.recycler_main);
+            zip_code = b.getInt("ZIP");
+        }
+        if (zip_code == 0) {
+            Intent intent = new Intent(this, ZipDialog.class );
+            intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(intent);
+        }
+
+        zip_code_display = (TextView)findViewById(R.id.zip_code_display);
+        zip_code_display.setText("Showing results for: " + zip_code);
+
+
+         mRecyclerMain = (RecyclerView)findViewById(R.id.recycler_main);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerMain.setHasFixedSize(true);
@@ -59,14 +70,22 @@ public class MainActivity extends Activity {
         mLayoutManager = new GridLayoutManager(this, 1); // span count 2
         mRecyclerMain.setLayoutManager(mLayoutManager);
 
-        //populate with dummy rep
-        Representative dummy_rep = new Representative("Bernie Sanders, I", "berniesanders@server.gov", "berniesanders.com", R.drawable.fred_160);
         List<Representative> _list = new ArrayList<>();
-        _list.add(dummy_rep);
+        //populate with dummy rep
+        for (int i= 0; i < 3; i++) {
+            Random rand = new Random();
+            int start1 = rand.nextInt(40);
+            int start2 = rand.nextInt(40);
+            Representative dummy_rep = new Representative(lorem.substring(start1, start1 + 10) + " , I", lorem.substring(start2, start2 + 10) + "@something.gov", "website.com", R.drawable.fred_160);
+            _list.add(dummy_rep);
+        }
 
         //set adapter
         mAdapter = new RepDataAdapter(_list, getApplicationContext());
         mRecyclerMain.setAdapter(mAdapter);
+
+
+
     }
 
 
