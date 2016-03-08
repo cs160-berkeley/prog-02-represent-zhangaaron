@@ -8,11 +8,20 @@ public class Representative {
     String email;
     String website;
     int photoID;
+    String twitterID;
 
     public Representative(String name, String email, String website, int photoID) {
         this.name = name;
         this.email = email;
         this.website = website;
         this.photoID = photoID;
+    }
+
+    public Representative(String name, String email, String website, String twitterID ) {
+        this.name = name;
+        this.email = email;
+        this.website = website;
+        this.twitterID = twitterID;
+        this.photoID = R.drawable.fred_160;
     }
 }

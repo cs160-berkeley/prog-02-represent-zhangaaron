@@ -18,15 +18,14 @@ import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends Activity {
-    //there's not much interesting happening. when the buttons are pressed, they start
-    //the PhoneToWatchService with the cat name passed in.
 
     private RecyclerView mRecyclerMain;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private int zip_code;
     private TextView zip_code_display;
-    final String lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
+    private SunlightAPI congressAPI;
+    //final String lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
 
     @Override
     protected void onResume() {
@@ -69,15 +68,8 @@ public class MainActivity extends Activity {
         //set grid layout manager
         mLayoutManager = new GridLayoutManager(this, 1); // span count 2
         mRecyclerMain.setLayoutManager(mLayoutManager);
-
-        List<Representative> _list = new ArrayList<>();
-        //populate with dummy rep
-        Representative a1 = new Representative("Bernie Sanders, I", "bern@something.gov", "website.com", R.drawable.fred_160);
-        Representative b2 = new Representative("Hillary Clinton, D", "hil@privateserver.gov", "website.com", R.drawable.fred_160);
-        Representative c3 = new Representative("Dolan Trump, R", "dolan@something.gov", "websitearony.com",  R.drawable.fred_160);
-        _list.add(a1);
-        _list.add(b2);
-        _list.add(c3);
+        congressAPI = new SunlightAPI();
+        List<Representative> _list = congressAPI.reps_for_area(94709);
 
 //        for (int i= 0; i < 3; i++) {
 //            Random rand = new Random();
