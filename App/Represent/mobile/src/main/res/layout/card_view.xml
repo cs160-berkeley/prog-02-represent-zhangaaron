@@ -10,69 +10,57 @@
     android:paddingTop="100dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:background="#304ffe"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="6dp"
         android:orientation="vertical">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
             <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_width="100sp"
+                android:layout_height="100sp"
                 android:id="@+id/rep_photo"
-                android:layout_row="3"<TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/representative_name"
-            android:textSize="24sp"
-            android:text="Bernie Sanders, I "
-            android:layout_row="21"
-            android:layout_column="0" />
-
-        <Button
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LEARN MORE"
-            android:id="@+id/button"
-            android:layout_row="21"
-            android:layout_column="1"
-            android:theme="@android:style/Widget.Material.Light.Button" />
+                android:layout_row="3"
                 android:layout_column="0"
                 android:src="#b83636"
                 android:layout_rowSpan="3"
-                android:layout_columnSpan="3" />
+                android:layout_columnSpan="3"
+                android:layout_margin="5sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="berniesanders@campaign.gov"
-                android:id="@+id/email_text"
-                android:layout_row="3"
-                android:layout_column="1"
-                android:layout_rowSpan="1"
-                android:layout_columnSpan="1"
-                android:layout_margin="0dp" />
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:orientation="vertical">
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:textAppearance="?android:attr/textAppearanceSmall"
+                   android:text="berniesanders@campaign.gov"
+                   android:id="@+id/email_text"
+                   android:layout_row="3"
+                   android:layout_column="1"
+                   android:layout_rowSpan="1"
+                   android:layout_columnSpan="1"
+                   android:layout_marginTop="5sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="bernsite.site.com"
-                android:id="@+id/website_text"
-                android:layout_row="5"
-                android:layout_column="1" />
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:textAppearance="?android:attr/textAppearanceSmall"
+                   android:text="bernsite.site.com"
+                   android:id="@+id/website_text"
+                   android:layout_row="5"
+                   android:layout_column="1" />
+           </LinearLayout>
         </LinearLayout>
 
         <TextView
             android:layout_width="wrap_content"
-            android:id="@+id/tweet_text"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:text="lorem ipsum crapsum help i&apos;m being made to do cs160 text tweet - 6:00 PM"
+            android:id="@+id/tweet_text"
+            android:text="lorem ipsum crapsum help i&apos;m bddddddddwdawdawdj wjdwj da djw djw dwdieing made to do cs160 text tweet - 6:00 PM"
             android:fitsSystemWindows="false"
             android:filterTouchesWhenObscured="false"
             android:layout_row="12"
@@ -80,30 +68,22 @@
             android:layout_rowSpan="8"
             android:layout_columnWeight="1"
             android:layout_columnSpan="6" />
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_row="19"
-            android:layout_column="0"
-            android:layout_columnSpan="24" />
 
-        
         <LinearLayout
+            android:background="#FFFFFF"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/representative_name"
-                android:textSize="24sp"
-                android:text="Bernie Sanders, I "
-                android:layout_row="21"
-                android:layout_column="0" />
+                android:textSize="21sp"
+                android:text="Bernie Sanders, I " />
 
             <Button
                 style="?android:attr/buttonStyleSmall"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="LEARN MORE"
                 android:id="@+id/button"
@@ -111,6 +91,14 @@
                 android:layout_column="1"
                 android:theme="@android:style/Widget.Material.Light.Button" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_row="19"
+            android:layout_column="0"
+            android:layout_columnSpan="24" />
 
 
     </LinearLayout>

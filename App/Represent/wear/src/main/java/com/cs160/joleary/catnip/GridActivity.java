@@ -11,9 +11,17 @@ import android.widget.TextView;
 
 import com.cs160.joleary.catnip.dummy.DummyContent;
 
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 
 public class GridActivity extends Activity implements ItemFragment.OnListFragmentInteractionListener {
+
+    // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
+    private static final String TWITTER_KEY = "IWa1hAGugIHn81U4TwXzJIoc0";
+    private static final String TWITTER_SECRET = "9jdUHpRAMAUaYEPJU85Xf5iqUVPQZxDGkc6DVH6TEEZHGvWSqB";
+
 
     private TextView mTextView;
     private Button mFeedBtn;
@@ -23,6 +31,8 @@ public class GridActivity extends Activity implements ItemFragment.OnListFragmen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
+        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.grid);
 
         try {

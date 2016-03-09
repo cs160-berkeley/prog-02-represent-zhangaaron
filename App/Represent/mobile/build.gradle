@@ -32,5 +32,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.2.0'
     compile 'com.android.support:cardview-v7:23.2.0'
     compile 'com.android.support:support-v4:23.2.0'
-    compile 'com.mashape.unirest:unirest-java:1.4.7'
+//    compile 'com.mashape.unirest:unirest-java:1.4.7'
+    compile 'com.mashape.unirest:unirest-java:1.4.8'
 }
