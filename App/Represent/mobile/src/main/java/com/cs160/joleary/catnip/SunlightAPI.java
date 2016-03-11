@@ -6,11 +6,11 @@ import android.util.Log;
 import java.util.ArrayList;
 
 import com.google.android.gms.wearable.Asset;
-import com.mashape.unirest.*;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
+//import com.mashape.unirest.*;
+//import com.mashape.unirest.http.HttpResponse;
+//import com.mashape.unirest.http.JsonNode;
+//import com.mashape.unirest.http.Unirest;
+//import com.mashape.unirest.http.exceptions.UnirestException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,37 +28,37 @@ public class SunlightAPI {
     public SunlightAPI() {}
 
     public ArrayList<Representative> reps_for_area(Location loc) {
-        try {
-            HttpResponse<JsonNode> jsonResponse = Unirest.post(BASE_URL + LOCATE_PATH)
-                    .header("accept", "application/json")
-                    .queryString("apikey", API_KEY)
-                    .field("latitude", new Double(loc.getLatitude()).toString())
-                    .field("longitude", loc.getLongitude())
-                    .asJson();
-            JSONArray results = jsonResponse.getBody().getObject().getJSONArray("results");
-            return parse_reps(results);
-        } catch (UnirestException e) {
-            Log.d(this.getClass().toString(), "Caught exception: " + e.getMessage());
-        } catch (JSONException e) {
-            Log.d(this.getClass().toString(), "Caught exception: " + e.getMessage());
-        }
+//        try {
+//            HttpResponse<JsonNode> jsonResponse = Unirest.post(BASE_URL + LOCATE_PATH)
+//                    .header("accept", "application/json")
+//                    .queryString("apikey", API_KEY)
+//                    .field("latitude", new Double(loc.getLatitude()).toString())
+//                    .field("longitude", loc.getLongitude())
+//                    .asJson();
+//            JSONArray results = jsonResponse.getBody().getObject().getJSONArray("results");
+//            return parse_reps(results);
+//        } catch (UnirestException e) {
+//            Log.d(this.getClass().toString(), "Caught exception: " + e.getMessage());
+//        } catch (JSONException e) {
+//            Log.d(this.getClass().toString(), "Caught exception: " + e.getMessage());
+//        }
         return null; //TODO: complete me
     }
 
     public ArrayList<Representative> reps_for_area(int zip) {
-        try {
-            HttpResponse<JsonNode> jsonResponse = Unirest.post(BASE_URL + LOCATE_PATH)
-                    .header("accept", "application/json")
-                    .queryString("apikey", API_KEY)
-                    .field("zip", new Integer(zip).toString())
-                    .asJson();
-            JSONArray results = jsonResponse.getBody().getObject().getJSONArray("results");
-            return parse_reps(results);
-        } catch (UnirestException e) {
-            Log.d(this.getClass().toString(), "Caught exception: " + e.getMessage());
-        } catch (JSONException e) {
-            Log.d(this.getClass().toString(), "Caught exception: " + e.getMessage());
-        }
+//        try {
+//            HttpResponse<JsonNode> jsonResponse = Unirest.post(BASE_URL + LOCATE_PATH)
+//                    .header("accept", "application/json")
+//                    .queryString("apikey", API_KEY)
+//                    .field("zip", new Integer(zip).toString())
+//                    .asJson();
+//            JSONArray results = jsonResponse.getBody().getObject().getJSONArray("results");
+//            return parse_reps(results);
+//        } catch (UnirestException e) {
+//            Log.d(this.getClass().toString(), "Caught exception: " + e.getMessage());
+//        } catch (JSONException e) {
+//            Log.d(this.getClass().toString(), "Caught exception: " + e.getMessage());
+//        }
         return null;
     }
 

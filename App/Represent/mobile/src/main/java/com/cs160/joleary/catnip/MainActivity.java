@@ -2,6 +2,7 @@ package com.cs160.joleary.catnip;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,20 +13,23 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity{
 
     private RecyclerView mRecyclerMain;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private int zip_code;
+    private double lat;
+    private double _long;
     private TextView zip_code_display;
     private SunlightAPI congressAPI;
-    //final String lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
 
     @Override
     protected void onResume() {
@@ -33,8 +37,10 @@ public class MainActivity extends Activity {
         Bundle b = getIntent().getExtras();
         if (b != null) {
             zip_code = b.getInt("ZIP");
+            lat = b.getDouble("lat");
+            _long = b.getDouble("long");
         }
-        if (zip_code == 0) {
+        if (zip_code == 0 && lat == 0.0) {
             Intent intent = new Intent(this, ZipDialog.class );
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
@@ -47,17 +53,22 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Bundle b = getIntent().getExtras();
         if (b != null) {
-
+            lat = b.getDouble("lat");
+            _long = b.getDouble("long");
             zip_code = b.getInt("ZIP");
         }
-        if (zip_code == 0) {
+        if (zip_code == 0 && lat == 0.0) {
             Intent intent = new Intent(this, ZipDialog.class );
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
         }
 
         zip_code_display = (TextView)findViewById(R.id.zip_code_display);
-        zip_code_display.setText("Showing results for: " + zip_code);
+        if (zip_code != 0) {
+            zip_code_display.setText("Showing results for: " + zip_code);
+        } else {
+            zip_code_display.setText("Showing results for location: lat " + lat + " long " + _long);
+        }
 
 
          mRecyclerMain = (RecyclerView)findViewById(R.id.recycler_main);
@@ -69,8 +80,16 @@ public class MainActivity extends Activity {
         mLayoutManager = new GridLayoutManager(this, 1); // span count 2
         mRecyclerMain.setLayoutManager(mLayoutManager);
         congressAPI = new SunlightAPI();
-        List<Representative> _list = congressAPI.reps_for_area(94709);
+        //List<Representative> _list = congressAPI.reps_for_area(94709);
 
+        List<Representative> _list = new ArrayList<>();
+        //populate with dummy rep
+        Representative a1 = new Representative("Bernie Sanders, I", "bern@something.gov", "website.com", R.drawable.fred_160);
+        Representative b2 = new Representative("Hillary Clinton, D", "hil@privateserver.gov", "website.com", R.drawable.fred_160);
+        Representative c3 = new Representative("Dolan Trump, R", "dolan@something.gov", "websitearony.com",  R.drawable.fred_160);
+        _list.add(a1);
+        _list.add(b2);
+        _list.add(c3);
 //        for (int i= 0; i < 3; i++) {
 //            Random rand = new Random();
 //            int start1 = rand.nextInt(40);
@@ -85,6 +104,7 @@ public class MainActivity extends Activity {
         Intent startWatch = new Intent(getApplicationContext(), PhoneToWatchService.class);
         startWatch.putExtra("zip", new Integer(zip_code).toString());
         startService(startWatch);
+
 
     }
 
@@ -110,4 +130,5 @@ public class MainActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

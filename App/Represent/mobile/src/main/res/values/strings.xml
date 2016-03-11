@@ -5,4 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_detailed_view">DetailedView</string>
     <string name="title_activity_zip_dialog">ZipDialog</string>
+    <string name="server_client_id">531190516843-7rn76hmge74neh49g83fbf144978n5v7.apps.googleusercontent.com</string>
+    <string name="google_app_id">531190516843</string>
 </resources>

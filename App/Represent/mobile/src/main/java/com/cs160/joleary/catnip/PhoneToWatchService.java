@@ -13,6 +13,8 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
+import org.json.JSONArray;
+
 /**
  * Created by joleary on 2/19/16.
  */
@@ -48,8 +50,9 @@ public class PhoneToWatchService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Which cat do we want to feed? Grab this info from INTENT
         // which was passed over when we called startService
-        Bundle extras = intent.getExtras();
-        final String zip = extras.getString("zip");
+            //Bundle extras = intent.getExtras();
+//            final String zip = extras.getString("zip");
+        final String zip = "0";
 
         Log.d(this.getClass().toString(), "In onStartCommand");
 
@@ -90,6 +93,7 @@ public class PhoneToWatchService extends Service {
                 }
             }
         }).start();
+
     }
 
 }
