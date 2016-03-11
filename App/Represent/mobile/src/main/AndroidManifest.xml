@@ -35,6 +35,9 @@
         <activity
             android:name=".ZipDialog"
             android:label="@string/title_activity_zip_dialog"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="ad9aa12553355b3b2b27fdd0cce50c40eedeb7a3" />
     </application>
 
 </manifest>
