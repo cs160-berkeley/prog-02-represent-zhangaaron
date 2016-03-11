@@ -2,30 +2,21 @@ package com.cs160.joleary.catnip;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.twitter.sdk.android.core.*;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +74,7 @@ public class MainActivity extends Activity{
             _long = b.getDouble("long");
             zip_code = b.getInt("ZIP");
         }
-        if (zip_code == 0 && lat == 0.0) {
+        if (zip_code == 0 && lat == 0.0) { // not instantiated yet, so do that first.
             Intent intent = new Intent(this, ZipDialog.class );
             intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
             startActivity(intent);
@@ -93,9 +84,8 @@ public class MainActivity extends Activity{
         if (zip_code != 0) {
             zip_code_display.setText("Showing results for: " + zip_code);
         } else {
-            zip_code_display.setText("Showing results for location: lat " + lat + " long " + _long);
+            zip_code_display.setText("Showing results for location: lat " + lat + " long " + _long); // TODO: replace with location name.
         }
-
 
          mRecyclerMain = (RecyclerView)findViewById(R.id.recycler_main);
         // use this setting to improve performance if you know that changes
@@ -108,14 +98,23 @@ public class MainActivity extends Activity{
         congressAPI = new SunlightAPI();
         //List<Representative> _list = congressAPI.reps_for_area(94709);
 
-        List<Representative> _list = new ArrayList<>();
-        //populate with dummy rep
-        Representative a1 = new Representative("Bernie Sanders, I", "bern@something.gov", "website.com", R.drawable.fred_160);
-        Representative b2 = new Representative("Hillary Clinton, D", "hil@privateserver.gov", "website.com", R.drawable.fred_160);
-        Representative c3 = new Representative("Dolan Trump, R", "dolan@something.gov", "websitearony.com",  R.drawable.fred_160);
-        _list.add(a1);
-        _list.add(b2);
-        _list.add(c3);
+//        List<Representative> _list = new ArrayList<>();
+//        //populate with dummy rep
+//        Representative a1 = new Representative("Bernie Sanders, I", "bern@something.gov", "website.com", R.drawable.fred_160);
+//        Representative b2 = new Representative("Hillary Clinton, D", "hil@privateserver.gov", "website.com", R.drawable.fred_160);
+//        Representative c3 = new Representative("Dolan Trump, R", "dolan@something.gov", "websitearony.com",  R.drawable.fred_160);
+//        _list.add(a1);
+//        _list.add(b2);
+//        _list.add(c3);
+        congressAPI = new SunlightAPI(94709);
+        Log.d(this.getClass().toString(), congressAPI.reps_for_area(94709).toString());
+
+        //set adapter
+        mAdapter = new RepDataAdapter(_list, getApplicationContext());
+        mRecyclerMain.setAdapter(mAdapter);
+        Intent startWatch = new Intent(getApplicationContext(), PhoneToWatchService.class);
+        startWatch.putExtra("zip", new Integer(zip_code).toString());
+        startService(startWatch);
 
 
         // TODO: Use a more specific parent
@@ -148,18 +147,12 @@ public class MainActivity extends Activity{
                 String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
                 Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
             }
+
             @Override
             public void failure(TwitterException exception) {
                 Log.d("TwitterKit", "Login with Twitter failure", exception);
             }
         });
-
-        //set adapter
-        mAdapter = new RepDataAdapter(_list, getApplicationContext());
-        mRecyclerMain.setAdapter(mAdapter);
-        Intent startWatch = new Intent(getApplicationContext(), PhoneToWatchService.class);
-        startWatch.putExtra("zip", new Integer(zip_code).toString());
-        startService(startWatch);
 
 
     }
