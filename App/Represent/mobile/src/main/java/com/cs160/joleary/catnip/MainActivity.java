@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +30,11 @@ import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.*;
+import com.twitter.sdk.android.core.models.Tweet;
+import com.twitter.sdk.android.tweetui.*;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends Activity{
 
@@ -110,13 +116,24 @@ public class MainActivity extends Activity{
         _list.add(a1);
         _list.add(b2);
         _list.add(c3);
-//        for (int i= 0; i < 3; i++) {
-//            Random rand = new Random();
-//            int start1 = rand.nextInt(40);
-//            int start2 = rand.nextInt(40);
-//            Representative dummy_rep = new Representative(lorem.substring(start1, start1 + 10) + " , I", lorem.substring(start2, start2 + 10) + "@something.gov", "website.com", R.drawable.fred_160);
-//            _list.add(dummy_rep);
-//        }
+
+
+        // TODO: Use a more specific parent
+        final ViewGroup parentView = (ViewGroup) getWindow().getDecorView().getRootView();
+        // TODO: Base this Tweet ID on some data from elsewhere in your app
+        long tweetId = 631879971628183552L;
+        TweetUtils.loadTweet(tweetId, new Callback<Tweet>() {
+            @Override
+            public void success(Result<Tweet> result) {
+                TweetView tweetView = new TweetView(MainActivity.this, result.data);
+                parentView.addView(tweetView);
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Log.d("TwitterKit", "Load Tweet failure", exception);
+            }
+        });
 
 
         loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
