@@ -62,10 +62,20 @@
         </LinearLayout>
 
         <com.twitter.sdk.android.tweetui.TweetView
-            android:id="@+id/bike_tweet"
+            android:id="@+id/tweet_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            twittersdk:tw__tweet_id="510908133917487104" />
+            twittersdk:tw__tweet_id="631879971628183552"
+            twittersdk:tw__tweet_actions_enabled="false"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            android:layout_row="19"
+            android:layout_column="0"
+            android:layout_columnSpan="24" />
 
         <LinearLayout
             android:background="#FFFFFF"
@@ -90,14 +100,6 @@
                 android:layout_column="1"
                 android:theme="@android:style/Widget.Material.Light.Button" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_row="19"
-            android:layout_column="0"
-            android:layout_columnSpan="24" />
 
 
     </LinearLayout>

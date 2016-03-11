@@ -80,34 +80,34 @@ public class MainActivity extends Activity{
             startActivity(intent);
         }
 
-        zip_code_display = (TextView)findViewById(R.id.zip_code_display);
-        if (zip_code != 0) {
-            zip_code_display.setText("Showing results for: " + zip_code);
-        } else {
-            zip_code_display.setText("Showing results for location: lat " + lat + " long " + _long); // TODO: replace with location name.
-        }
-
          mRecyclerMain = (RecyclerView)findViewById(R.id.recycler_main);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerMain.setHasFixedSize(true);
 
         //set grid layout manager
-        mLayoutManager = new GridLayoutManager(this, 1); // span count 2
+        mLayoutManager = new GridLayoutManager(this, 1); // span count 1
         mRecyclerMain.setLayoutManager(mLayoutManager);
-        congressAPI = new SunlightAPI();
-        //List<Representative> _list = congressAPI.reps_for_area(94709);
 
-//        List<Representative> _list = new ArrayList<>();
+        List<Representative> _list = new ArrayList<>();
 //        //populate with dummy rep
-//        Representative a1 = new Representative("Bernie Sanders, I", "bern@something.gov", "website.com", R.drawable.fred_160);
-//        Representative b2 = new Representative("Hillary Clinton, D", "hil@privateserver.gov", "website.com", R.drawable.fred_160);
-//        Representative c3 = new Representative("Dolan Trump, R", "dolan@something.gov", "websitearony.com",  R.drawable.fred_160);
-//        _list.add(a1);
-//        _list.add(b2);
-//        _list.add(c3);
-        congressAPI = new SunlightAPI(94709);
-        Log.d(this.getClass().toString(), congressAPI.reps_for_area(94709).toString());
+        Representative a1 = new Representative("Bernie Sanders, I", "bern@something.gov", "website.com", R.drawable.fred_160);
+        Representative b2 = new Representative("Hillary Clinton, D", "hil@privateserver.gov", "website.com", R.drawable.fred_160);
+        Representative c3 = new Representative("Dolan Trump, R", "dolan@something.gov", "websitearony.com",  R.drawable.fred_160);
+        _list.add(a1);
+        _list.add(b2);
+        _list.add(c3);
+
+        zip_code_display = (TextView)findViewById(R.id.zip_code_display);
+        if (zip_code != 0) {
+            zip_code_display.setText("Showing results for: " + zip_code);
+            congressAPI = new SunlightAPI(zip_code);
+        } else {
+            zip_code_display.setText("Showing results for location: lat " + lat + " long " + _long); // TODO: replace with location name.
+            congressAPI = new SunlightAPI(lat, _long);
+        }
+
+//        Log.d(this.getClass().toString(), congressAPI.reps_for_area(94709).toString());
 
         //set adapter
         mAdapter = new RepDataAdapter(_list, getApplicationContext());
@@ -117,9 +117,9 @@ public class MainActivity extends Activity{
         startService(startWatch);
 
 
-        // TODO: Use a more specific parent
-        final ViewGroup parentView = (ViewGroup) getWindow().getDecorView().getRootView();
-        // TODO: Base this Tweet ID on some data from elsewhere in your app
+//        // TODO: Use a more specific parent
+//        final ViewGroup parentView = (ViewGroup) getWindow().getDecorView().getRootView();
+//        // TODO: Base this Tweet ID on some data from elsewhere in your app
         long tweetId = 631879971628183552L;
         TweetUtils.loadTweet(tweetId, new Callback<Tweet>() {
             @Override

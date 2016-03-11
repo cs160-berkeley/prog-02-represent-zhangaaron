@@ -1,5 +1,6 @@
 package com.cs160.joleary.catnip;
 
+import android.content.Context;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -25,60 +26,50 @@ public class SunlightAPI implements Runnable {
     public static final String BASE_URL = "congress.api.sunlightfoundation.com";
     public static final String API_KEY = "cd0c902118a84cd7965ba8e5e7f7c5fa";
     public static final String LOCATE_PATH = "/locate";
-    private Location loc;
+    private double  lat;
+    private double _long;
     private int zip;
+    private Context context;
     private OkHttpClient client;
 
-    public SunlightAPI(Location loc) {
-         this.loc = loc;
-         client = new OkHttpClient();
+    public SunlightAPI(Context context, double lat, double _long) {
+        this.lat = lat;
+        this._long = _long;
+        this.context = context;
+        client = new OkHttpClient();
     }
 
-    public SunlightAPI(int zip) {
+    public SunlightAPI(Context context, int zip) {
         this.zip = zip;
-        client = new OKHttpClient();
+        this.context = context;
+        client = new OkHttpClient();
     }
 
 
     @Override
     public void run() {
-        if (loc == null) {
-            reps_for_area(loc);
+        List<Representative> reps = reps_for_area();
+
+    }
+    public ArrayList<Representative> reps_for_area() {
+        HttpUrl url;
+        if (zip == 0) {
+             url = new HttpUrl.Builder()
+                    .host(BASE_URL)
+                    .addPathSegment(LOCATE_PATH)
+                    .addQueryParameter("apikey", API_KEY)
+                    .addQueryParameter("latitutde", new Double(lat).toString())
+                    .addQueryParameter("longitude", new Double(_long).toString())
+                    .build();
         } else {
-            reps_for_area(zip);
+             url = new HttpUrl.Builder()
+                    .scheme("http")
+                    .host(BASE_URL)
+                    .addPathSegment(LOCATE_PATH)
+                    .addQueryParameter("apikey", API_KEY)
+                    .addQueryParameter("zip", new Integer(zip).toString())
+                    .build();
         }
-    }
-    public ArrayList<Representative> reps_for_area(Location loc) {
-        HttpUrl url = new HttpUrl.Builder()
-                .host(BASE_URL)
-                .addPathSegment(LOCATE_PATH)
-                .addQueryParameter("apikey", API_KEY)
-                .addQueryParameter("latitutde", new Double(loc.getLatitude()).toString())
-                .addQueryParameter("longitude", new Double(loc.getLongitude()).toString())
-                .build();
-        Request request = new Request.Builder()
-                .addHeader("accept", "application/json")
-                .url(url.toString())
-                        .build();
-        try {
-            Response response = client.newCall(request).execute();
-            JSONObject j = new JSONObject(response.body().string());
-            return parse_reps(j.getJSONArray("results"));
-        } catch (IOException|JSONException e) {
-            Log.wtf(this.getClass().toString(), "Got Exception in reps_for_area " + e.getMessage());
-        }
-        return null;
-
-    }
-
-    public ArrayList<Representative> reps_for_area(int zip) {
-        HttpUrl url = new HttpUrl.Builder()
-                .scheme("http")
-                .host(BASE_URL)
-                .addPathSegment(LOCATE_PATH)
-                .addQueryParameter("apikey", API_KEY)
-                .addQueryParameter("zip", new Integer(zip).toString())
-                .build();
         Request request = new Request.Builder()
                 .addHeader("accept", "application/json")
                 .url(url.toString())
@@ -91,6 +82,7 @@ public class SunlightAPI implements Runnable {
             Log.wtf(this.getClass().toString(), "Got Exception in reps_for_area " + e.getMessage());
         }
         return null;
+
     }
 
     public ArrayList<Representative> parse_reps(JSONArray json_a) {
