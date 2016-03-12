@@ -24,7 +24,13 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 import com.twitter.sdk.android.Twitter;
@@ -78,9 +84,6 @@ public class MainActivity extends Activity{
             Log.wtf("D", "COUNTY IS " + county);
         }
 
-//        Log.d(this.getClass().toString(), congressAPI.reps_for_area(94709).toString());
-//        Handler h = new Handler();
-//        h.post(congressAPI);
         try {
             Thread fuck_this_thread = new Thread(congressAPI);
             fuck_this_thread.start(); // get sunlight info update the recyclerview data adapter
@@ -89,7 +92,26 @@ public class MainActivity extends Activity{
             Log.wtf("d", "fuck everything");
         }
         mAdapter.notifyDataSetChanged();
-        RepDataAdapter x = (RepDataAdapter) mAdapter;
+
+        InputStream is = getResources().openRawResource(R.raw.election);
+        Writer writer = new StringWriter();
+        char[] buffer = new char[1024];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+            }
+        } catch (Exception e) {
+            Log.wtf(this.getClass().toString(), "Got exception: " + e.toString());
+        }
+
+        String jsonString = writer.toString();
+        try {
+            JSONArray j = new JSONArray(jsonString);
+        } catch (Exception e) {
+            Log.wtf(this.getClass().toString(), "Got exception: " + e.toString());
+        }
 
         Intent startWatch = new Intent(getApplicationContext(), PhoneToWatchService.class);
         startWatch.putExtra("zip", repData());
@@ -215,7 +237,7 @@ public class MainActivity extends Activity{
                         JSONObject addr = addr_comps.getJSONObject(i);
                         JSONArray types = addr.getJSONArray("types");
                         if (types.getString(0).equals("administrative_area_level_2")) {
-                            county = addr.getString("short_name");
+                            county = addr.getString("short_name").replaceAll("County", "").trim();
                         }
                     }
 
@@ -238,6 +260,24 @@ public class MainActivity extends Activity{
 
     protected String repData() {
         JSONObject j = new JSONObject();
-        return "HELLO WORLD";
+        try {
+
+            j.accumulate("county", county);
+            List<Representative> r = ((RepDataAdapter) mAdapter).repList;
+            ArrayList<String> names = new ArrayList<>();
+            ArrayList<String> _rep_ids = new ArrayList<>();
+            for (int i = 0; i < r.size(); i++) {
+                names.add(r.get(i).name);
+                _rep_ids.add(r.get(i).bioguide);
+            }
+            JSONArray reps = new JSONArray(names);
+            JSONArray rep_ids = new JSONArray(_rep_ids);
+            j.accumulate("reps", reps);
+            j.accumulate("rep_ids", rep_ids);
+        } catch (JSONException e) {
+            Log.wtf("D", "Caught JSON exception when marshalling data 248");
+
+        }
+        return j.toString();
     }
 }

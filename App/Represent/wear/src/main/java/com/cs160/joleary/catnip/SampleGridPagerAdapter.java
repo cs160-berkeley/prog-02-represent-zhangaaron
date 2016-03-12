@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by aaron on 3/2/16.
@@ -26,39 +27,46 @@ public class SampleGridPagerAdapter extends FragmentGridPagerAdapter {
     private final Context mContext;
     private ArrayList<SimpleRow> mPages;
     private int zip;
+    private double obama;
+    private double romney;
+    private List<String> repNames;
 
-    public SampleGridPagerAdapter(Context context, FragmentManager fm, int zip) {
+    public SampleGridPagerAdapter(Context context, FragmentManager fm, double obama, double romney, List<String> repNames) {
         super(fm);
         mContext = context;
-        this.zip = zip;
+        this.obama = obama;
+        this.romney = romney;
+        this.repNames = repNames;
         initPages();
-        Log.d("D", "ZIP IS ---- " + zip);
+
     }
 
     private void initPages() {
         mPages = new ArrayList<SimpleRow>();
 
         SimpleRow row1 = new SimpleRow();
-        Log.d("D", "ZIP IS" + zip);
-        if (zip == 94709) {
-            row1.addPages(new SimplePage("2012 Vote View", "Obama: 60 Romney 54", R.drawable.obama_romney, R.drawable.obama_romney));
-        } else {
-            row1.addPages(new SimplePage("2012 Vote View", "Obama: 47 Romney: 51", R.drawable.obama_romney2, R.drawable.obama_romney2));
-        }
 
-        SimpleRow row2 = new SimpleRow();
-        row2.addPages(new SimplePage("Bernie Sanders, I", "Bernie Sanders, I", R.drawable.fred_160, R.drawable.fred_160));
-
-        SimpleRow row3 = new SimpleRow();
-        row3.addPages(new SimplePage("Hillary Clinton, D", "Hillary Clinton, D", R.drawable.fred_160, R.drawable.fred_160));
-
-        SimpleRow row4 = new SimpleRow();
-        row4.addPages(new SimplePage("Dolan Trump, R", "Dolan Trump, R", R.drawable.fred_160, R.drawable.fred_160));
-
+        row1.addPages(new SimplePage("", "Obama:" + obama + " Romeny" + romney, R.drawable.obama_romney, R.drawable.obama_romney));
         mPages.add(row1);
-        mPages.add(row2);
-        mPages.add(row3);
-        mPages.add(row4);
+
+        for (int i = 0; i < repNames.size(); i++) {
+            SimpleRow row = new SimpleRow();
+            row.addPages(new SimplePage(repNames.get(i), repNames.get(i), R.drawable.fred_160, R.drawable.fred_160));
+            mPages.add(row);
+        }
+//        SimpleRow row2 = new SimpleRow();
+//        row2.addPages(new SimplePage("Bernie Sanders, I", "Bernie Sanders, I", R.drawable.fred_160, R.drawable.fred_160));
+//
+//        SimpleRow row3 = new SimpleRow();
+//        row3.addPages(new SimplePage("Hillary Clinton, D", "Hillary Clinton, D", R.drawable.fred_160, R.drawable.fred_160));
+//
+//        SimpleRow row4 = new SimpleRow();
+//        row4.addPages(new SimplePage("Dolan Trump, R", "Dolan Trump, R", R.drawable.fred_160, R.drawable.fred_160));
+//
+//        mPages.add(row1);
+//        mPages.add(row2);
+//        mPages.add(row3);
+//        mPages.add(row4);
     }
 
     @Override

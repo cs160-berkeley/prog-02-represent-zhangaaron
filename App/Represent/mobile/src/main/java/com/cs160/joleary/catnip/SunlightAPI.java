@@ -108,8 +108,10 @@ public class SunlightAPI implements Runnable {
             try {
                 JSONObject j = json_a.getJSONObject(i);
                 String name = j.getString("first_name") + " " + j.getString("last_name");
+                String rep_id = j.getString("bioguide_id");
+                String party = j.getString("party");
                 Representative r = new Representative(name, j.getString("oc_email"),
-                        j.getString("website"), j.getString("twitter_id"));
+                        j.getString("website"), j.getString("twitter_id"), rep_id, party);
                 ret.add(r);
             } catch (JSONException e) {
                 Log.wtf(this.getClass().toString(), "Caught exception: " + e.getMessage());

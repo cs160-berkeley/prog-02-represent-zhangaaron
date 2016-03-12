@@ -9,6 +9,8 @@ public class Representative {
     String website;
     int photoID;
     String twitterID;
+    String party;
+    String bioguide;
 
     public Representative(String name, String email, String website, int photoID) {
         this.name = name;
@@ -17,11 +19,13 @@ public class Representative {
         this.photoID = photoID;
     }
 
-    public Representative(String name, String email, String website, String twitterID ) {
+    public Representative(String name, String email, String website, String twitterID, String bioguide, String party ) {
         this.name = name;
         this.email = email;
         this.website = website;
         this.twitterID = twitterID;
         this.photoID = R.drawable.fred_160;
+        this.party = party;
+        this.bioguide = bioguide;
     }
 }

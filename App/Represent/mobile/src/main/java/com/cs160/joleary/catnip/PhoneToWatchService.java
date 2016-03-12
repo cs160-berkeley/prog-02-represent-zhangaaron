@@ -50,8 +50,9 @@ public class PhoneToWatchService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Which cat do we want to feed? Grab this info from INTENT
         // which was passed over when we called startService
-            Bundle extras = intent.getExtras();
-            final String zip = extras.getString("zip");
+        Bundle extras = intent.getExtras();
+        final String zip = extras.getString("zip");
+        Log.wtf(this.getClass().toString(), "ZIP IS:"+ zip);
         Log.d(this.getClass().toString(), "In onStartCommand");
 
         // Send the message with the cat name
@@ -66,7 +67,7 @@ public class PhoneToWatchService extends Service {
             }
         }).start();
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override //remember, all services need to implement an IBiner

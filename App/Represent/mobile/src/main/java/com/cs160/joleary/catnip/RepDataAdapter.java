@@ -40,7 +40,7 @@ public class RepDataAdapter extends RecyclerView.Adapter<RepDataAdapter.RepViewH
         TextView website;
         TextView email;
         TextView name;
-        ImageView rep_photo;
+//        ImageView rep_photo;
         Button button;
         TweetView tweet;
 
@@ -50,7 +50,7 @@ public class RepDataAdapter extends RecyclerView.Adapter<RepDataAdapter.RepViewH
             website = (TextView)itemView.findViewById(R.id.website_text);
             name = (TextView)itemView.findViewById(R.id.representative_name);
             email = (TextView)itemView.findViewById(R.id.email_text);
-            rep_photo = (ImageView)itemView.findViewById(R.id.rep_photo);
+//            rep_photo = (ImageView)itemView.findViewById(R.id.rep_photo);
             button = (Button)itemView.findViewById(R.id.button);
             tweet = (TweetView)itemView.findViewById(R.id.tweet_view);
         }
