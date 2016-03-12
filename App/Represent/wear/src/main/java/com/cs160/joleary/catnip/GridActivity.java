@@ -13,7 +13,17 @@ import com.cs160.joleary.catnip.dummy.DummyContent;
 
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+
+import org.json.JSONObject;
+
 import io.fabric.sdk.android.Fabric;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 
 public class GridActivity extends Activity implements ItemFragment.OnListFragmentInteractionListener {
@@ -26,13 +36,12 @@ public class GridActivity extends Activity implements ItemFragment.OnListFragmen
     private TextView mTextView;
     private Button mFeedBtn;
     private int zip;
+    private
     private ArrayList<String> repNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        TwitterAuthConfig authConfig = new TwitterAuthConfig(TWITTER_KEY, TWITTER_SECRET);
-        Fabric.with(this, new Twitter(authConfig));
         setContentView(R.layout.grid);
 
         try {
@@ -49,6 +58,29 @@ public class GridActivity extends Activity implements ItemFragment.OnListFragmen
         GridViewPager mGridPager = (GridViewPager) findViewById(R.id.pager);
         Log.d(this.getClass().toString(), "ZIP INT IS ----- " + zip);
         mGridPager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager(), zip));
+
+        InputStream is = getResources().openRawResource(R.raw.election_county_2012);
+        Writer writer = new StringWriter();
+        char[] buffer = new char[1024];
+        try {
+            Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            int n;
+            while ((n = reader.read(buffer)) != -1) {
+                writer.write(buffer, 0, n);
+            }
+        } catch (Exception e) {
+            Log.wtf(this.getClass().toString(), "Got exception: " + e.toString());
+        }
+
+        String jsonString = writer.toString();
+        try {
+            JSONObject j = new JSONObject(jsonString);
+        } catch (Exception e) {
+            Log.wtf(this.getClass().toString(), "Got exception: " + e.toString());
+        }
+
+
+
 
 //        mFeedBtn = (Button) findViewById(R.id.feed_btn);
 
