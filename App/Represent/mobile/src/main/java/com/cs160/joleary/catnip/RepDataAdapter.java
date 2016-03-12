@@ -4,12 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+import io.fabric.sdk.android.Fabric;
+import com.twitter.sdk.android.Twitter;
+import com.twitter.sdk.android.core.*;
+import com.twitter.sdk.android.core.models.Tweet;
+import com.twitter.sdk.android.core.services.StatusesService;
+import com.twitter.sdk.android.tweetui.*;
+
 
 import java.util.List;
 
@@ -17,7 +29,7 @@ import java.util.List;
  * Created by aaron on 3/1/16.
  */
 public class RepDataAdapter extends RecyclerView.Adapter<RepDataAdapter.RepViewHolder>  {
-    List<Representative> repList;
+    public List<Representative> repList;
     Context app_context;
     public RepDataAdapter (List<Representative> repList, Context app_context) {
         this.repList = repList;
@@ -30,6 +42,7 @@ public class RepDataAdapter extends RecyclerView.Adapter<RepDataAdapter.RepViewH
         TextView name;
         ImageView rep_photo;
         Button button;
+        TweetView tweet;
 
         RepViewHolder(View itemView) {
             super(itemView);
@@ -39,6 +52,7 @@ public class RepDataAdapter extends RecyclerView.Adapter<RepDataAdapter.RepViewH
             email = (TextView)itemView.findViewById(R.id.email_text);
             rep_photo = (ImageView)itemView.findViewById(R.id.rep_photo);
             button = (Button)itemView.findViewById(R.id.button);
+            tweet = (TweetView)itemView.findViewById(R.id.tweet_view);
         }
     }
 
@@ -56,11 +70,29 @@ public class RepDataAdapter extends RecyclerView.Adapter<RepDataAdapter.RepViewH
 
     @Override
     public void onBindViewHolder(RepViewHolder repView, int i) {
-        repView.website.setText(repList.get(i).website);
-        repView.name.setText(repList.get(i).name);
-        repView.email.setText(repList.get(i).email);
-        repView.rep_photo.setImageResource(repList.get(i).photoID);
+        Representative rep = repList.get(i);
+        repView.website.setText(rep.website);
+        repView.name.setText(rep.name);
+        repView.email.setText(rep.email);
+        //repView.rep_photo.setImageResource(rep.photoID);
         repView.button.setOnClickListener(new ButtonListener(i, app_context));
+        final RepViewHolder view_to_add_tweet = repView;
+        StatusesService s = TwitterCore.getInstance().getApiClient().getStatusesService();
+        Log.wtf(this.getClass().toString(), "TWITTER ID IS: " + rep.twitterID);
+        s.userTimeline(null, rep.twitterID, 0, null, null, false, true, false, false, new Callback<List<Tweet>>() {
+            @Override
+            public void success(Result<List<Tweet>> result) {
+                Tweet t = result.data.get(0);
+                t.entities.media.get(0);
+                view_to_add_tweet.tweet.setTweet(result.data.get(0));
+            }
+
+            @Override
+            public void failure(TwitterException exception) {
+                Log.d("TwitterKit", "Load Tweet failure", exception);
+            }
+        });  // https://dev.twitter.com/rest/reference/get/statuses/user_timeline
+
     }
 
     @Override
