@@ -19,12 +19,23 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import io.fabric.sdk.android.Fabric;
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.*;
 import com.twitter.sdk.android.core.models.Tweet;
 import com.twitter.sdk.android.tweetui.*;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class MainActivity extends Activity{
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
@@ -41,6 +52,9 @@ public class MainActivity extends Activity{
     private double _long;
     private TextView zip_code_display;
     private SunlightAPI congressAPI;
+    private String county;
+    private OkHttpClient client;
+
 
     @Override
     protected void onResume() {
@@ -60,14 +74,11 @@ public class MainActivity extends Activity{
         } else {
             zip_code_display.setText("Showing results for location: lat " + lat + " long " + _long); // TODO: replace with location name.
             congressAPI = new SunlightAPI(this.getApplicationContext(), mAdapter, lat, _long);
+            reverse_geocode(lat, _long);
+            Log.wtf("D", "COUNTY IS " + county);
         }
 
 //        Log.d(this.getClass().toString(), congressAPI.reps_for_area(94709).toString());
-
-
-        Intent startWatch = new Intent(getApplicationContext(), PhoneToWatchService.class);
-        startWatch.putExtra("zip", new Integer(zip_code).toString());
-        startService(startWatch);
 //        Handler h = new Handler();
 //        h.post(congressAPI);
         try {
@@ -79,6 +90,10 @@ public class MainActivity extends Activity{
         }
         mAdapter.notifyDataSetChanged();
         RepDataAdapter x = (RepDataAdapter) mAdapter;
+
+        Intent startWatch = new Intent(getApplicationContext(), PhoneToWatchService.class);
+        startWatch.putExtra("zip", repData());
+        startService(startWatch);
     }
 
     @Override
@@ -90,6 +105,7 @@ public class MainActivity extends Activity{
 
         setContentView(R.layout.activity_main);
         Bundle b = getIntent().getExtras();
+        client = new OkHttpClient();
         if (b != null) {
             lat = b.getDouble("lat");
             _long = b.getDouble("long");
@@ -122,68 +138,28 @@ public class MainActivity extends Activity{
         mAdapter = new RepDataAdapter(_list, getApplicationContext());
         mRecyclerMain.setAdapter(mAdapter);
 
-        zip_code_display = (TextView)findViewById(R.id.zip_code_display);
-//        if (zip_code != 0) {
-//            zip_code_display.setText("Showing results for: " + zip_code);
-//            congressAPI = new SunlightAPI(this.getApplicationContext(), mAdapter, zip_code );
-//        } else {
-//            zip_code_display.setText("Showing results for location: lat " + lat + " long " + _long); // TODO: replace with location name.
-//            congressAPI = new SunlightAPI(this.getApplicationContext(), mAdapter, lat, _long);
-//        }
-//
-////        Log.d(this.getClass().toString(), congressAPI.reps_for_area(94709).toString());
-//
-//
-//        Intent startWatch = new Intent(getApplicationContext(), PhoneToWatchService.class);
-//        startWatch.putExtra("zip", new Integer(zip_code).toString());
-//        startService(startWatch);
-////        Handler h = new Handler();
-////        h.post(congressAPI);
-//        try {
-//
-//            new Thread(congressAPI).join(); // get sunlight info update the recyclerview data adapter
-//        } catch (Exception e) {
-//            Log.wtf("d", "fuck everything");
-//        }
-//        mAdapter.notifyDataSetChanged();
 
 
-//        // TODO: Use a more specific parent
-//        final ViewGroup parentView = (ViewGroup) getWindow().getDecorView().getRootView();
-//        // TODO: Base this Tweet ID on some data from elsewhere in your app
-//        long tweetId = 631879971628183552L;
-//        TweetUtils.loadTweet(tweetId, new Callback<Tweet>() {
+
+
+//        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
+//        loginButton.setCallback(new Callback<TwitterSession>() {
 //            @Override
-//            public void success(Result<Tweet> result) {
-//                TweetView tweetView = new TweetView(MainActivity.this, result.data);
-//                parentView.addView(tweetView);
+//            public void success(Result<TwitterSession> result) {
+//                // The TwitterSession is also available through:
+//                // Twitter.getInstance().core.getSessionManager().getActiveSession()
+//                TwitterSession session = result.data;
+//                // TODO: Remove toast and use the TwitterSession's userID
+//                // with your app's user model
+//                String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
+//                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
 //            }
 //
 //            @Override
 //            public void failure(TwitterException exception) {
-//                Log.d("TwitterKit", "Load Tweet failure", exception);
+//                Log.d("TwitterKit", "Login with Twitter failure", exception);
 //            }
 //        });
-
-
-        loginButton = (TwitterLoginButton) findViewById(R.id.twitter_login_button);
-        loginButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                // The TwitterSession is also available through:
-                // Twitter.getInstance().core.getSessionManager().getActiveSession()
-                TwitterSession session = result.data;
-                // TODO: Remove toast and use the TwitterSession's userID
-                // with your app's user model
-                String msg = "@" + session.getUserName() + " logged in! (#" + session.getUserId() + ")";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-                Log.d("TwitterKit", "Login with Twitter failure", exception);
-            }
-        });
 
 
     }
@@ -219,5 +195,49 @@ public class MainActivity extends Activity{
         loginButton.onActivityResult(requestCode, resultCode, data);
     }
 
+    void reverse_geocode(double lat, double _long) {
+        String url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat+ ","+ _long +"&key=AIzaSyCLL_I-jIoipC8gr7z3kU97YZFn98GYlDU";
+        final Request request = new Request.Builder()
+                .addHeader("accept", "application/json")
+                .url(url.toString())
+                .build();
 
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Response response = client.newCall(request).execute();
+                    String res = response.body().string();
+                    JSONObject j = new JSONObject(res);
+                    Log.wtf("RES", res);
+                    JSONArray addr_comps = j.getJSONArray("results").getJSONObject(0).getJSONArray("address_components");
+                    for (int i = 0; i < addr_comps.length(); i++) {
+                        JSONObject addr = addr_comps.getJSONObject(i);
+                        JSONArray types = addr.getJSONArray("types");
+                        if (types.getString(0).equals("administrative_area_level_2")) {
+                            county = addr.getString("short_name");
+                        }
+                    }
+
+
+
+                } catch (IOException|JSONException e) {
+                    Log.wtf(this.getClass().toString(), "got exception " + e.toString());
+                }
+            }
+        });
+        t.start();
+        try {
+
+            t.join();
+        } catch (Exception e) {
+            Log.wtf("D", "TIMEOUT OR SOMETHING: " + e.getMessage());
+        }
+    }
+
+
+    protected String repData() {
+        JSONObject j = new JSONObject();
+        return "HELLO WORLD";
+    }
 }

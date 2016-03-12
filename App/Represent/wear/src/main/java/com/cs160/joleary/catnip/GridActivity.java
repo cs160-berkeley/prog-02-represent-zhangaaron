@@ -36,7 +36,6 @@ public class GridActivity extends Activity implements ItemFragment.OnListFragmen
     private TextView mTextView;
     private Button mFeedBtn;
     private int zip;
-    private
     private ArrayList<String> repNames;
 
     @Override

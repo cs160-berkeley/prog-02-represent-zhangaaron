@@ -83,7 +83,6 @@ public class RepDataAdapter extends RecyclerView.Adapter<RepDataAdapter.RepViewH
             @Override
             public void success(Result<List<Tweet>> result) {
                 Tweet t = result.data.get(0);
-                t.entities.media.get(0);
                 view_to_add_tweet.tweet.setTweet(result.data.get(0));
             }
 
