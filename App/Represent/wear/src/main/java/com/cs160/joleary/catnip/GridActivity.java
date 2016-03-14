@@ -42,6 +42,7 @@ public class GridActivity extends Activity implements ItemFragment.OnListFragmen
     private ArrayList<String> repNames;
     private HashMap<String, ArrayList<Double>> vote_view;
     private String county;
+    private ArrayList<String> repIds;
     GridViewPager mGridPager;
 
     @Override
@@ -82,20 +83,24 @@ public class GridActivity extends Activity implements ItemFragment.OnListFragmen
 
         try {
             Intent intent = getIntent();
-            String zip_string = intent.getStringExtra("zip");
-            Log.d(this.getClass().toString(), "ZIP STRING IS " + zip_string);
-            if (zip_string != null) {
-                JSONObject j = new JSONObject(zip_string);
+            String rep_json = intent.getStringExtra("zip");
+            Log.d(this.getClass().toString(), "ZIP STRING IS " + rep_json);
+            if (rep_json != null) {
+                JSONObject j = new JSONObject(rep_json);
                 JSONArray j_a = j.getJSONArray("reps");
+                JSONArray j_a_ids = j.getJSONArray("rep_ids");
                 repNames = new ArrayList<>();
+                repIds = new ArrayList<>();
                 for (int i = 0; i < j_a.length(); i++) {
                     repNames.add(j_a.getString(i));
+                    repIds.add(j_a_ids.getString(i));
                 }
+                Log.wtf("D", "IN GRID ACTIVITY LENGTH IS " + repIds.size());
                 county = j.getString("county");
                 Log.d(this.getClass().toString(), "ZIP IS ----- " + zip);
-                mGridPager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager(), vote_view.get(county).get(0), vote_view.get(county).get(1), repNames));
+                mGridPager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager(), vote_view.get(county).get(0), vote_view.get(county).get(1), repNames, repIds));
             } else {
-                mGridPager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager(), 0d, 0d, new ArrayList<String>()));
+                mGridPager.setAdapter(new SampleGridPagerAdapter(this, getFragmentManager(), 0d, 0d, new ArrayList<String>(), new ArrayList<String>()));
             }
         } catch (JSONException e) {
             Log.d("D", e.getMessage());  //this is great I know

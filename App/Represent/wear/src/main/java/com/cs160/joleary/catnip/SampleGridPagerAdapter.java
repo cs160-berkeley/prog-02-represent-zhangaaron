@@ -30,13 +30,16 @@ public class SampleGridPagerAdapter extends FragmentGridPagerAdapter {
     private double obama;
     private double romney;
     private List<String> repNames;
+    private List<String> repIds;
 
-    public SampleGridPagerAdapter(Context context, FragmentManager fm, double obama, double romney, List<String> repNames) {
+    public SampleGridPagerAdapter(Context context, FragmentManager fm, double obama, double romney, List<String> repNames, List<String> repIDs) {
         super(fm);
         mContext = context;
         this.obama = obama;
         this.romney = romney;
         this.repNames = repNames;
+        this.repIds = repIDs;
+        Log.wtf("D", "IN ADAPTERLENGTH IS " + repIds.size());
         initPages();
 
     }
@@ -54,31 +57,21 @@ public class SampleGridPagerAdapter extends FragmentGridPagerAdapter {
             row.addPages(new SimplePage(repNames.get(i), repNames.get(i), R.drawable.fred_160, R.drawable.fred_160));
             mPages.add(row);
         }
-//        SimpleRow row2 = new SimpleRow();
-//        row2.addPages(new SimplePage("Bernie Sanders, I", "Bernie Sanders, I", R.drawable.fred_160, R.drawable.fred_160));
-//
-//        SimpleRow row3 = new SimpleRow();
-//        row3.addPages(new SimplePage("Hillary Clinton, D", "Hillary Clinton, D", R.drawable.fred_160, R.drawable.fred_160));
-//
-//        SimpleRow row4 = new SimpleRow();
-//        row4.addPages(new SimplePage("Dolan Trump, R", "Dolan Trump, R", R.drawable.fred_160, R.drawable.fred_160));
-//
-//        mPages.add(row1);
-//        mPages.add(row2);
-//        mPages.add(row3);
-//        mPages.add(row4);
     }
 
     @Override
     public Fragment getFragment(int row, int col) {
         final int _row = row;
+        final int _col = col;
         Log.d("D", "Request for row: " + row + " col: " + col);
         if (col != 0) {
             return ActionButton.create(R.mipmap.ic_launcher, R.string.go_to_phone, new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent go_to_phone = new Intent(mContext, WatchToPhoneService.class);
-                    go_to_phone.putExtra("rep_name", mPages.get(_row).getPages(0).mTitle);
+                    Log.wtf("D", "Row col is:" + _row + ", " + _col);
+                    Log.wtf("D", "IN ADAPTER METHOD LENGTH IS " + repIds.size());
+                    go_to_phone.putExtra("rep_name", repIds.get(_row - 1));
                     mContext.startService(go_to_phone);
 
                 }

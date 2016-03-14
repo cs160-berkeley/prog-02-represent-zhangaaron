@@ -72,7 +72,7 @@ public class RepDataAdapter extends RecyclerView.Adapter<RepDataAdapter.RepViewH
     public void onBindViewHolder(RepViewHolder repView, int i) {
         Representative rep = repList.get(i);
         repView.website.setText(rep.website);
-        repView.name.setText(rep.name);
+        repView.name.setText(rep.name + ", " + rep.party);
         repView.email.setText(rep.email);
         //repView.rep_photo.setImageResource(rep.photoID);
         repView.button.setOnClickListener(new ButtonListener(i, app_context));
@@ -109,7 +109,7 @@ public class RepDataAdapter extends RecyclerView.Adapter<RepDataAdapter.RepViewH
         @Override
         public void onClick(View v) {
             Intent detailed_view = new Intent(context, DetailedView.class);
-            detailed_view.putExtra("name", repList.get(id).name);
+            detailed_view.putExtra("rep_id", repList.get(id).bioguide);
             detailed_view.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(detailed_view);
         }

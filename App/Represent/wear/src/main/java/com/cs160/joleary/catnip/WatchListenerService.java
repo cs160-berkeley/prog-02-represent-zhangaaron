@@ -32,11 +32,11 @@ public class WatchListenerService extends WearableListenerService {
             Log.d("T", "about to start watch GridActivity with CAT_NAME: Fred");
             startActivity(intent);
         } else if (messageEvent.getPath().equalsIgnoreCase(ZIP)) {
-            String zip = new String(messageEvent.getData(), StandardCharsets.UTF_8);
+            String rep_json = new String(messageEvent.getData(), StandardCharsets.UTF_8);
             Intent intent = new Intent(this, GridActivity.class );
             intent.addFlags( Intent.FLAG_ACTIVITY_NEW_TASK );
             //you need to add this flag since you're starting a new activity from a service
-            intent.putExtra("zip", zip);
+            intent.putExtra("zip", rep_json);
             Log.d("T", "Start intent to change the zip");
             startActivity(intent);
         } else {
